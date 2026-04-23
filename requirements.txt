@@ -1,0 +1,6 @@
+yt-dlp>=2024.1.0
+openai-whisper>=20231117
+ffmpeg-python>=0.2.0
+schedule>=1.2.0
+PyYAML>=6.0
+streamlit>=1.32.0

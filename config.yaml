@@ -1,0 +1,28 @@
+# ─── Canal e frase ────────────────────────────────────────────────────────────
+channel_url: "https://www.youtube.com/@NOME_DO_CANAL"
+start_phrase: "sua frase aqui"      # corta a partir desta frase em cada vídeo
+language: "pt"                       # idioma para o Whisper (pt, en, auto…)
+
+# ─── Agendamento ──────────────────────────────────────────────────────────────
+run_at: "06:00"       # horário de execução diária (HH:MM)
+days_back: 1          # quantos dias atrás considerar como "novos"
+
+# ─── Modelo Whisper ────────────────────────────────────────────────────────────
+# tiny | base | small | medium | large  (maior = mais preciso, porém mais lento)
+whisper_model: "small"
+
+# ─── Diretórios ───────────────────────────────────────────────────────────────
+downloads_dir: "./output/downloads"
+clips_dir: "./output/clips"
+final_dir: "./output/final"
+
+# ─── Arquivo de estado (evita baixar vídeos duplicados) ───────────────────────
+state_file: "./output/.downloaded.json"
+
+# ─── Formato de saída ─────────────────────────────────────────────────────────
+# {date} é substituído pela data de execução (YYYYMMDD)
+final_filename: "compilado_{date}.mp4"
+
+# ─── Download ─────────────────────────────────────────────────────────────────
+video_format: "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best"
+max_videos: 10        # limite de vídeos por execução (0 = sem limite)
