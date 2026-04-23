@@ -20,13 +20,19 @@ from downloader import download_new_videos
 from transcriber import find_phrase_timestamp
 from processor import cut_from_timestamp, concatenate
 
+import os
+
+_base_dir = os.environ.get("YT_CLIPPER_BASE_DIR", "output")
+_log_path = os.path.join(_base_dir, "run.log")
+os.makedirs(_base_dir, exist_ok=True)
+
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s  %(levelname)-8s  %(message)s",
     datefmt="%Y-%m-%d %H:%M:%S",
     handlers=[
         logging.StreamHandler(sys.stdout),
-        logging.FileHandler("output/run.log", encoding="utf-8"),
+        logging.FileHandler(_log_path, encoding="utf-8"),
     ],
 )
 log = logging.getLogger(__name__)
