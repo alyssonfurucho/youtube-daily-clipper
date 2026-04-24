@@ -58,6 +58,8 @@ def run(config: dict) -> None:
         state_file=config["state_file"],
         video_format=config["video_format"],
         max_videos=int(config.get("max_videos", 0)),
+        cookies_from_browser=config.get("cookies_from_browser", ""),
+        cookies_file=config.get("cookies_file", ""),
     )
 
     if not videos:

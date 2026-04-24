@@ -26,3 +26,12 @@ final_filename: "compilado_{date}.mp4"
 # ─── Download ─────────────────────────────────────────────────────────────────
 video_format: "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best"
 max_videos: 10        # limite de vídeos por execução (0 = sem limite)
+
+# ─── Autenticação YouTube (necessário para evitar bloqueio de bot) ─────────────
+# Opção 1 — cookies direto do navegador (recomendado):
+#   Valores: chrome | safari | firefox | brave | edge
+cookies_from_browser: "safari"
+
+# Opção 2 — arquivo de cookies exportado (deixe em branco se usar a opção 1):
+#   Exporte com extensão "Get cookies.txt LOCALLY" no Chrome/Firefox
+cookies_file: ""

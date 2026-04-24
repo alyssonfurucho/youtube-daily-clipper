@@ -127,6 +127,22 @@ with st.sidebar:
         value=int(config.get("max_videos", 10)), help="0 = sem limite.",
     )
 
+    st.divider()
+    st.markdown("**🔐 Autenticação YouTube**")
+    browser_options = ["", "safari", "chrome", "firefox", "brave", "edge"]
+    cookies_from_browser = st.selectbox(
+        "Cookies do navegador",
+        browser_options,
+        index=browser_options.index(config.get("cookies_from_browser", "safari")),
+        help="Necessário para evitar bloqueio de bot do YouTube.",
+    )
+    cookies_file = st.text_input(
+        "Ou: caminho do arquivo cookies.txt",
+        value=config.get("cookies_file", ""),
+        help="Deixe em branco se usar a opção acima.",
+        disabled=bool(cookies_from_browser),
+    )
+
     if st.button("💾 Salvar configuração", use_container_width=True):
         config.update({
             "channel_url": channel_url,
@@ -136,6 +152,8 @@ with st.sidebar:
             "days_back": int(days_back),
             "run_at": run_at,
             "max_videos": int(max_videos),
+            "cookies_from_browser": cookies_from_browser,
+            "cookies_file": cookies_file,
         })
         save_config(config)
         st.success("Configuração salva!")
@@ -178,6 +196,8 @@ with tab_run:
             "days_back": int(days_back),
             "run_at": run_at,
             "max_videos": int(max_videos),
+            "cookies_from_browser": cookies_from_browser,
+            "cookies_file": cookies_file,
         })
         save_config(config)
 

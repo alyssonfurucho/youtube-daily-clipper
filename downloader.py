@@ -26,6 +26,8 @@ def download_new_videos(
     state_file: str,
     video_format: str,
     max_videos: int = 0,
+    cookies_from_browser: str = "",
+    cookies_file: str = "",
 ) -> list[str]:
     output_dir = Path(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -58,6 +60,13 @@ def download_new_videos(
         "progress_hooks": [progress_hook],
         "playlist_end": playlist_end,
     }
+
+    if cookies_from_browser:
+        ydl_opts["cookiesfrombrowser"] = (cookies_from_browser,)
+        log.info("Usando cookies do navegador: %s", cookies_from_browser)
+    elif cookies_file and Path(cookies_file).exists():
+        ydl_opts["cookiefile"] = cookies_file
+        log.info("Usando arquivo de cookies: %s", cookies_file)
 
     log.info("Buscando vídeos em: %s (após %s)", channel_url, date_after)
 
