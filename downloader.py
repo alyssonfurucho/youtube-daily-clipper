@@ -48,7 +48,9 @@ def download_new_videos(
                 newly_downloaded.add(video_id)
                 log.info("Baixado: %s", Path(filepath).name)
 
-    playlist_end = max_videos if max_videos > 0 else None
+    # Limita metadados: busca apenas os N vídeos mais recentes do canal
+    # (canais grandes têm milhares de vídeos — não precisamos varrer todos)
+    playlist_items = max_videos if max_videos > 0 else 20
 
     ydl_opts = {
         "format": video_format,
@@ -58,7 +60,8 @@ def download_new_videos(
         "quiet": True,
         "no_warnings": True,
         "progress_hooks": [progress_hook],
-        "playlist_end": playlist_end,
+        # Pega apenas os N vídeos mais recentes (evita varrer 12 mil vídeos)
+        "playlist_end": playlist_items,
     }
 
     if cookies_from_browser:
@@ -68,11 +71,12 @@ def download_new_videos(
         ydl_opts["cookiefile"] = cookies_file
         log.info("Usando arquivo de cookies: %s", cookies_file)
 
-    log.info("Buscando vídeos em: %s (após %s)", channel_url, date_after)
+    log.info("Buscando os %d vídeos mais recentes em: %s (após %s)",
+             playlist_items, channel_url, date_after)
 
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         try:
-            info = ydl.extract_info(channel_url, download=False)
+            info = ydl.extract_info(channel_url, download=True)
         except Exception as exc:
             log.error("Falha ao acessar canal: %s", exc)
             return []
@@ -80,19 +84,16 @@ def download_new_videos(
         if not info:
             return []
 
-        entries = info.get("entries", [info])
-
+        # Coleta arquivos baixados a partir das entries
+        entries = info.get("entries", [info]) if isinstance(info, dict) else []
         for entry in entries:
             if not entry:
                 continue
             video_id = entry.get("id", "")
-            if video_id in already_downloaded:
-                log.debug("Já baixado, pulando: %s", video_id)
+            if not video_id or video_id in already_downloaded:
                 continue
-            try:
-                ydl.download([entry.get("webpage_url") or entry.get("url", "")])
-            except Exception as exc:
-                log.warning("Erro ao baixar %s: %s", video_id, exc)
+            # O progress_hook já captura o filepath; aqui só registramos o id
+            newly_downloaded.add(video_id)
 
     _save_state(state_file, already_downloaded | newly_downloaded)
     log.info("%d novo(s) vídeo(s) baixado(s).", len(downloaded_files))
