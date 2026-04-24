@@ -1,6 +1,7 @@
 import logging
 import re
 import unicodedata
+from typing import Optional
 
 import whisper
 
@@ -28,7 +29,7 @@ def find_phrase_timestamp(
     phrase: str,
     model_name: str = "small",
     language: str = "pt",
-) -> float | None:
+) -> Optional[float]:
     model = _load_model(model_name)
     lang = None if language == "auto" else language
 
